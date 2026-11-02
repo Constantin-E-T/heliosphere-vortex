@@ -53,6 +53,8 @@ export function planetSub(n) {
 
 export let SHOTS;
 
+export let VOYAGER_SHOTS;
+
 export function computeShot(sh, e, cp, lp) {
   focusPos(sh.target, cP);
   const R = bodyR(sh.target),
@@ -117,12 +119,17 @@ export function computeShot(sh, e, cp, lp) {
 }
 
 export function nextShot(forced) {
+  const list = CINE.list;
   if (!forced) {
+    if (list !== SHOTS && CINE.i === list.length - 1) {
+      stopCine();
+      return;
+    }
     do {
-      CINE.i = (CINE.i + 1) % SHOTS.length;
-    } while (SHOTS[CINE.i].target === 'Voyager 1' && !live.voyVisible);
+      CINE.i = (CINE.i + 1) % list.length;
+    } while (list[CINE.i].target === 'Voyager 1' && !live.voyVisible);
   }
-  const sh = (CINE.sh = forced || SHOTS[CINE.i]);
+  const sh = (CINE.sh = forced || list[CINE.i]);
   CINE.t = 0;
   CINE.shown = false;
   $('#l3').classList.remove('show');
@@ -141,7 +148,7 @@ export function nextShot(forced) {
     $('#cine-fade').classList.add('on');
   }
   $('#cine-n').textContent =
-    `${String(CINE.i + 1).padStart(2, '0')} / ${String(SHOTS.length).padStart(2, '0')}`;
+    `${String(CINE.i + 1).padStart(2, '0')} / ${String(CINE.list.length).padStart(2, '0')}`;
 }
 
 export function fillL3(sh) {
@@ -209,8 +216,10 @@ export function updateCine(dt) {
   if (CINE.t >= sh.dur) nextShot();
 }
 
-export function startCine() {
+/** @param {typeof SHOTS} [list] Shots to play. The full tour loops; any other list ends on its last shot. */
+export function startCine(list = SHOTS) {
   if (CINE.on) return;
+  CINE.list = list;
   CINE.saved = {
     rate: S.rate,
     dir: S.dir,
@@ -255,12 +264,13 @@ export function cinePause() {
 }
 
 export function cineStep(dir) {
-  if (dir < 0) CINE.i = (CINE.i - 2 + SHOTS.length * 2) % SHOTS.length;
+  if (dir < 0) CINE.i = (CINE.i - 2 + CINE.list.length * 2) % CINE.list.length;
   nextShot();
 }
 
 // Tapping a body during the tour: the director cuts to it, then carries on with the tour from there
 export function cineVisit(name) {
+  CINE.list = SHOTS; // tapping a body during a short film continues with the full tour
   const i = SHOTS.findIndex(x => x.target === name && x.type !== 'galactic');
   if (i >= 0) {
     CINE.i = i;
@@ -383,6 +393,17 @@ export function initCinematic() {
       eb: 'Galactic frame',
       title: 'Through the Milky Way',
       sub: () => 'The Sun carries every planet at 251.9 km/s, 60° from their orbital plane'
+    }
+  ];
+  const voyagerShot = SHOTS.find(s => s.target === 'Voyager 1');
+  VOYAGER_SHOTS = [
+    voyagerShot,
+    {
+      ...voyagerShot,
+      dur: 12,
+      rate: 2,
+      eb: 'In interstellar space since 2012',
+      sub: () => 'Still inside the Milky Way. This view was built by FieldOps.'
     }
   ];
   $('#cine-prev').addEventListener('click', () => cineStep(-1));

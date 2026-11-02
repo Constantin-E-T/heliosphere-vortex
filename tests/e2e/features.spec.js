@@ -3,7 +3,9 @@ import { openApp, explore } from './helpers.js';
 
 test('welcome screen offers explore and tour', async ({ page }) => {
   const errors = await openApp(page);
-  await expect(page.locator('#splash-title')).toContainText('Heliosphere');
+  await expect(page.locator('#splash-title')).toContainText('A radio message to Voyager 1');
+  await expect(page.locator('#hero-time')).toContainText('seconds');
+  await expect(page.locator('#hero-milestone')).toContainText('18 November 2026');
   await expect(page.locator('#go-tour')).toBeVisible();
   expect(errors).toEqual([]);
 });
@@ -13,17 +15,28 @@ test('every scale opens from the level buttons', async ({ page }) => {
   await explore(page);
   for (const level of ['mw', 'lg', 'lu', 'solar']) {
     await page.locator(`#levels [data-level=${level}]`).click();
-    await expect(page.locator(`#levels [data-level=${level}]`)).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.locator(`#levels [data-level=${level}]`)).toHaveAttribute(
+      'aria-pressed',
+      'true'
+    );
     await page.waitForTimeout(1500);
   }
   expect(errors).toEqual([]);
 });
 
-for (const [hash, level] of [['#milky-way', 'mw'], ['#local-group', 'lg'], ['#local-universe', 'lu'], ['#solar-system', 'solar']]) {
+for (const [hash, level] of [
+  ['#milky-way', 'mw'],
+  ['#local-group', 'lg'],
+  ['#local-universe', 'lu'],
+  ['#solar-system', 'solar']
+]) {
   test(`shared link ${hash} opens ${level}`, async ({ page }) => {
     const errors = await openApp(page, { hash });
     await explore(page);
-    await expect(page.locator(`#levels [data-level=${level}]`)).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.locator(`#levels [data-level=${level}]`)).toHaveAttribute(
+      'aria-pressed',
+      'true'
+    );
     expect(errors).toEqual([]);
   });
 }
@@ -60,7 +73,7 @@ test('controls panel, help tabs and clean view work', async ({ page }) => {
   await page.locator('#b-help').click();
   await expect(page.locator('#help')).toBeVisible();
   const tabs = page.locator('#help [role=tab]');
-  for (let i = 0; i < await tabs.count(); i++) {
+  for (let i = 0; i < (await tabs.count()); i++) {
     await tabs.nth(i).click();
     await expect(page.locator('#help .tabpanel:not([hidden])')).toHaveCount(1);
   }
@@ -79,6 +92,39 @@ test('cinematic starts and exits', async ({ page }) => {
   await page.keyboard.press('Escape');
   await expect(page.locator('#cine')).toBeHidden();
   expect(errors).toEqual([]);
+});
+
+test('#voyager opens on Voyager 1', async ({ page }) => {
+  const errors = await openApp(page, { hash: '#voyager' });
+  await explore(page);
+  await expect(page.locator('#in-name')).toHaveText('Voyager 1');
+  expect(errors).toEqual([]);
+});
+
+test('Follow Voyager 1 plays the short film and returns to the app', async ({ page }) => {
+  const errors = await openApp(page);
+  await page.locator('#go-voyager').click({ timeout: 60_000 });
+  await expect(page.locator('#cine')).toBeVisible();
+  await expect(page.locator('#l3-t')).toContainText('Voyager 1', { timeout: 30_000 });
+  await expect(page.locator('#cine')).toBeHidden({ timeout: 75_000 });
+  await expect(page.locator('#in-name')).toHaveText('Voyager 1');
+  expect(errors).toEqual([]);
+});
+
+test('corrupt saved preferences do not stop the app', async ({ page }) => {
+  const errors = await openApp(page, { prefs: '{not json' });
+  await explore(page);
+  await expect(page.locator('#d-date')).not.toBeEmpty();
+  expect(errors).toEqual([]);
+});
+
+test('without WebGL the visitor gets a clear message', async ({ page }) => {
+  await page.addInitScript(() => {
+    HTMLCanvasElement.prototype.getContext = () => null;
+  });
+  await page.goto(process.env.TARGET === 'reference' ? 'about:blank' : '/');
+  await expect(page.locator('#splash-err')).toContainText('WebGL');
+  await expect(page.locator('#splash-err')).toBeVisible();
 });
 
 test('the app starts when every image fails to load', async ({ page }) => {

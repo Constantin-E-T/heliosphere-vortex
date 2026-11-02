@@ -5,10 +5,7 @@ import { live } from '../core/live.js';
 import { $, showFatal } from '../core/util.js';
 
 /* ================= RENDERER ================= */
-export const renderer = new THREE.WebGLRenderer({
-  antialias: true,
-  powerPreference: 'high-performance'
-});
+export let renderer;
 
 export const scene = new THREE.Scene();
 
@@ -50,6 +47,10 @@ export const galToScene = (l, b, out) =>
     .addScaledVector(NGP, Math.sin(b));
 
 export function initRenderer() {
+  renderer = new THREE.WebGLRenderer({
+    antialias: true,
+    powerPreference: 'high-performance'
+  });
   renderer.domElement.addEventListener('webglcontextlost', e => {
     e.preventDefault();
     $('#splash').classList.remove('gone');

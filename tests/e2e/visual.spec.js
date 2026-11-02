@@ -14,8 +14,14 @@ for (const [name, hash] of scenes) {
     await explore(page);
     await page.keyboard.press('Space');
     await page.waitForTimeout(9000);
-    await page.evaluate(() => { window.requestAnimationFrame = () => 0; });
+    await page.evaluate(() => {
+      window.requestAnimationFrame = () => 0;
+    });
     await page.waitForTimeout(500);
-    await expect(page).toHaveScreenshot(`${name}.png`, { maxDiffPixelRatio: 0.03, threshold: 0.3, timeout: 20_000 });
+    await expect(page).toHaveScreenshot(`${name}.png`, {
+      maxDiffPixelRatio: 0.03,
+      threshold: 0.3,
+      timeout: 20_000
+    });
   });
 }

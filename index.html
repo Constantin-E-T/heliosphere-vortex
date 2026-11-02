@@ -1,8 +1,25 @@
-<title>Heliosphere Vortex</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap">
-
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Heliosphere Vortex: where Voyager 1 is right now</title>
+<meta name="description" content="Follow Voyager 1 to one light-day from Earth, then fly from today's planets to the Laniakea Supercluster. Real positions from NASA and JPL data, free in your browser.">
+<meta name="theme-color" content="#04050b">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="%VITE_SITE_URL%/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Heliosphere Vortex">
+<meta property="og:title" content="Where Voyager 1 is right now">
+<meta property="og:description" content="Real positions from NASA and JPL data, from today's planets to the Laniakea Supercluster. Free in your browser.">
+<meta property="og:url" content="%VITE_SITE_URL%/">
+<meta property="og:image" content="%VITE_SITE_URL%/share-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Voyager 1's path out of the solar system, drawn in the Heliosphere Vortex app">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
 <div id="stage"></div>
 <div class="warp" id="warp"></div>
 <div id="labels"></div>
@@ -190,16 +207,18 @@
 
 <div class="splash" id="splash" role="dialog" aria-modal="true" aria-labelledby="splash-title">
   <div class="splash-inner">
-    <p class="eyebrow">Our place in space</p>
-    <h1 id="splash-title">Heliosphere <b>Vortex</b></h1>
-    <p class="splash-sub">Fly from today's planets to the Laniakea Supercluster. Every position comes from NASA and JPL data, and you can travel 6,000 years through time.</p>
+    <p class="splash-brand">Heliosphere Vortex</p>
+    <h1 id="splash-title">A radio message to Voyager 1 takes <span class="hero-time" id="hero-time">about a day</span>.</h1>
+    <p class="splash-sub" id="hero-milestone">Voyager 1 first reaches one light-day from Earth on 18 November 2026.</p>
+    <p class="splash-sub">Follow it, then fly from today's planets to the Laniakea Supercluster. Every position comes from NASA and JPL data, across 6,000 years.</p>
     <div class="load" aria-live="polite"><div class="track2"><span id="load-bar"></span></div><small id="load-t">Loading NASA imagery</small></div>
     <div class="cta-row">
-      <button class="cta" id="go-explore" disabled>Explore</button>
+      <button class="cta" id="go-voyager" disabled>Follow Voyager 1</button>
+      <button class="cta ghost" id="go-explore" disabled>Explore</button>
       <button class="cta ghost" id="go-tour" disabled>Watch the tour</button>
     </div>
     <p class="splash-err" id="splash-err" hidden></p>
-    <p class="splash-foot">Drag to orbit · scroll or pinch to zoom · tap any object</p>
+    <p class="splash-foot">Built by <a href="https://fieldops.uk" target="_blank" rel="noopener">FieldOps</a></p>
   </div>
 </div>
 <div class="modal" id="help" hidden role="dialog" aria-modal="true" aria-labelledby="help-title">
@@ -250,9 +269,13 @@
         <li>Galaxy and heliosphere measurements: GRAVITY 2021, Reid &amp; Brunthaler 2020, Schönrich et al. 2010, Bennett &amp; Bovy 2019, McConnachie 2012, Pietrzyński et al. 2019, Graczyk et al. 2020, Li et al. 2021, Mei et al. 2007, Blakeslee et al. 2009, Tully et al. 2014, Swaczyna et al. 2022 (IBEX).</li>
         <li>Built with <a href="https://threejs.org" target="_blank" rel="noopener">three.js</a>. Type: Syne, Manrope and JetBrains Mono.</li>
       </ul>
-      <p class="version">Version 1.0 · 31 October 2026 · Not affiliated with or endorsed by NASA.</p>
+      <h3>How this was built</h3>
+      <p>Designed and built by <a href="https://fieldops.uk" target="_blank" rel="noopener">FieldOps</a>, with Claude as coding partner. The source code is on <a href="https://github.com/Constantin-E-T/heliosphere-vortex" target="_blank" rel="noopener">GitHub</a>, with automated tests that check the positions against JPL Horizons.</p>
+      <p class="version">Version 1.5, November 2026. Not affiliated with or endorsed by NASA.</p>
     </section>
   </div>
 </div>
 <div class="toast glass" id="toast" role="status"></div>
 <script type="module" src="/src/main.js"></script>
+</body>
+</html>

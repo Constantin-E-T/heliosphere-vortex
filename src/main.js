@@ -1,5 +1,14 @@
+import '@fontsource/jetbrains-mono/latin-400.css';
+import '@fontsource/jetbrains-mono/latin-500.css';
+import '@fontsource/manrope/latin-400.css';
+import '@fontsource/manrope/latin-500.css';
+import '@fontsource/manrope/latin-600.css';
+import '@fontsource/manrope/latin-700.css';
+import '@fontsource/syne/latin-600.css';
+import '@fontsource/syne/latin-700.css';
+import '@fontsource/syne/latin-800.css';
 import './styles/app.css';
-import { initUtil } from './core/util.js';
+import { initUtil, showFatal } from './core/util.js';
 import { initSolarData } from './data/solar.js';
 import { initRenderer } from './scene/renderer.js';
 import { initTextures } from './scene/textures.js';
@@ -32,44 +41,53 @@ import { initFlight } from './cosmic/flight.js';
 import { initSwitching } from './cosmic/switching.js';
 import { initLoop } from './core/loop.js';
 import { initBoot } from './core/boot.js';
+import { initVoyagerHero } from './ui/voyager-hero.js';
 import { initWelcome } from './ui/welcome.js';
 
 // Order matters: each step uses what the steps before it created.
 function start() {
   if (!initUtil()) return;
-  initSolarData();
-  initRenderer();
-  initTextures();
-  initSky();
-  initSun();
-  initPlanets();
-  initVoyager();
-  initDust();
-  initWakes();
-  initState();
-  initTime();
-  initCamera();
-  initLabels();
-  initInfoCard();
-  initTimeMachine();
-  initCleanView();
-  initPanel();
-  initSound();
-  initKeyboard();
-  initPicking();
-  initCinematic();
-  initCosmicScales();
-  initCosmicRender();
-  initMilkyWay();
-  initPhotos();
-  initCatalogue();
-  initCosmicLevels();
-  initCosmicInfo();
-  initFlight();
-  initSwitching();
-  initLoop();
-  initBoot();
-  initWelcome();
+  try {
+    initSolarData();
+    initRenderer();
+    initTextures();
+    initSky();
+    initSun();
+    initPlanets();
+    initVoyager();
+    initDust();
+    initWakes();
+    initState();
+    initTime();
+    initCamera();
+    initLabels();
+    initInfoCard();
+    initTimeMachine();
+    initCleanView();
+    initPanel();
+    initSound();
+    initKeyboard();
+    initPicking();
+    initCinematic();
+    initCosmicScales();
+    initCosmicRender();
+    initMilkyWay();
+    initPhotos();
+    initCatalogue();
+    initCosmicLevels();
+    initCosmicInfo();
+    initFlight();
+    initSwitching();
+    initLoop();
+    initBoot();
+    initWelcome();
+    initVoyagerHero();
+  } catch (e) {
+    console.error(e);
+    showFatal(
+      'The 3D view could not start on this device. Try a recent Chrome, Safari, Edge or Firefox.'
+    );
+  }
 }
 
 start();

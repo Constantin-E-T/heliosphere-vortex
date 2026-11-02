@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-import { startCine } from '../camera/cinematic.js';
+import { setFocus } from '../camera/camera.js';
+import { VOYAGER_SHOTS, startCine } from '../camera/cinematic.js';
 import { frame } from '../core/loop.js';
 import { S } from '../core/state.js';
 import { $ } from '../core/util.js';
@@ -20,17 +21,21 @@ export function ready() {
   readyDone = true;
   $('#load-bar').style.width = '100%';
   $('#load-t').textContent = 'Ready';
-  $('#go-explore').disabled = $('#go-tour').disabled = false;
+  $('#go-voyager').disabled = $('#go-explore').disabled = $('#go-tour').disabled = false;
   if (seen) setTimeout(() => enter(false), 500);
-  else $('#go-explore').focus();
+  else $('#go-voyager').focus();
 }
 
 export function routeFromHash() {
   const h = (location.hash || '').slice(1),
     lv = Object.keys(LEVEL_HASH).find(k => LEVEL_HASH[k] === h);
-  if (lv && lv !== S.level) setLevel(lv);
+  if (h === 'voyager') {
+    if (S.level !== 'solar') setLevel('solar');
+    setFocus('Voyager 1');
+  } else if (lv && lv !== S.level) setLevel(lv);
 }
 
+/** @param {boolean|Array} tour true for the full tour, or a list of shots. */
 export function enter(tour) {
   if (splash.classList.contains('gone')) return;
   splash.classList.add('gone');
@@ -38,7 +43,7 @@ export function enter(tour) {
   try {
     localStorage.setItem('hv-seen', '1');
   } catch (e) {}
-  if (tour) startCine();
+  if (tour) startCine(tour === true ? undefined : tour);
   else {
     routeFromHash();
     if (!seen) setTimeout(() => toast('Drag to orbit · pinch to zoom · tap any object'), 700);
@@ -90,6 +95,7 @@ export function initWelcome() {
   } catch (e) {}
   THREE.DefaultLoadingManager.onLoad = ready;
   setTimeout(ready, 9000); // never hold people back if an image is slow or missing
+  $('#go-voyager').addEventListener('click', () => enter(VOYAGER_SHOTS));
   $('#go-explore').addEventListener('click', () => enter(false));
   $('#go-tour').addEventListener('click', () => enter(true));
   addEventListener('hashchange', () => {
@@ -98,7 +104,8 @@ export function initWelcome() {
   addEventListener(
     'keydown',
     e => {
-      if (!splash.classList.contains('gone') && e.key === 'Enter' && readyDone) {
+      const onControl = document.activeElement?.closest('a, button');
+      if (!splash.classList.contains('gone') && e.key === 'Enter' && readyDone && !onControl) {
         e.preventDefault();
         enter(false);
       }
