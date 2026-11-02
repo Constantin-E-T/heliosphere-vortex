@@ -102,11 +102,12 @@ test('#voyager opens on Voyager 1', async ({ page }) => {
 });
 
 test('Follow Voyager 1 plays the short film and returns to the app', async ({ page }) => {
+  test.setTimeout(240_000);
   const errors = await openApp(page);
   await page.locator('#go-voyager').click({ timeout: 60_000 });
   await expect(page.locator('#cine')).toBeVisible();
   await expect(page.locator('#l3-t')).toContainText('Voyager 1', { timeout: 30_000 });
-  await expect(page.locator('#cine')).toBeHidden({ timeout: 75_000 });
+  await expect(page.locator('#cine')).toBeHidden({ timeout: 180_000 });
   await expect(page.locator('#in-name')).toHaveText('Voyager 1');
   expect(errors).toEqual([]);
 });

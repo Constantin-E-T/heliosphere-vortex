@@ -60,7 +60,7 @@ export function initRenderer() {
     $('#load-bar').style.width = `${Math.round((loaded / total) * 100)}%`;
     $('#load-t').textContent = `Loading NASA imagery · ${loaded} of ${total}`;
   };
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setPixelRatio(Math.min(devicePixelRatio, innerWidth < 720 ? 1.75 : 2));
   renderer.setSize(innerWidth, innerHeight);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.15;

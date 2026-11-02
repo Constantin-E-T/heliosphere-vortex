@@ -1,3 +1,4 @@
+import { texUrl } from '../core/tex-url.js';
 import * as THREE from 'three';
 import { live } from '../core/live.js';
 import { COS_BY } from './catalogue.js';
@@ -67,7 +68,7 @@ export function ensurePhoto(o, tel) {
     return;
   }
   photoCache[key] = texLoader.load(
-    `tex/photo/${key}.jpg`,
+    texUrl(`photo/${key}`),
     t => {
       t.generateMipmaps = true;
       t.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());

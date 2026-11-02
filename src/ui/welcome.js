@@ -1,4 +1,3 @@
-import * as THREE from 'three';
 import { setFocus } from '../camera/camera.js';
 import { VOYAGER_SHOTS, startCine } from '../camera/cinematic.js';
 import { frame } from '../core/loop.js';
@@ -67,20 +66,22 @@ export function closeHelp() {
   helpReturn && helpReturn.focus && helpReturn.focus();
 }
 
-/* Adaptive quality: drop the pixel ratio on devices that cannot hold a smooth frame rate */
-export const perf = { t: 0, n: 0, acc: 0, lowered: false };
+/* Adaptive quality: step the pixel ratio down on devices that cannot hold a smooth frame rate */
+const PIXEL_RATIO_FLOORS = [1.5, 1];
+
+export const perf = { t: 0, n: 0, acc: 0 };
 
 export function watchPerf(dt) {
-  if (perf.lowered || document.hidden) return;
+  if (document.hidden) return;
   perf.acc += dt;
   perf.n++;
   perf.t += dt;
-  if (perf.t > 4) {
+  if (perf.t > 3) {
     const avg = perf.acc / perf.n;
     perf.t = perf.acc = perf.n = 0;
-    if (avg > 0.034 && renderer.getPixelRatio() > 1) {
-      perf.lowered = true;
-      renderer.setPixelRatio(1);
+    const next = PIXEL_RATIO_FLOORS.find(r => r < renderer.getPixelRatio());
+    if (avg > 0.03 && next) {
+      renderer.setPixelRatio(next);
       renderer.setSize(innerWidth, innerHeight);
     }
   }
@@ -89,12 +90,9 @@ export function watchPerf(dt) {
 export function initWelcome() {
   /* ================= WELCOME, ROUTES, HELP ================= */
   splash = $('#splash');
-  document.body.classList.add('intro');
   try {
     seen = localStorage.getItem('hv-seen') === '1';
   } catch (e) {}
-  THREE.DefaultLoadingManager.onLoad = ready;
-  setTimeout(ready, 9000); // never hold people back if an image is slow or missing
   $('#go-voyager').addEventListener('click', () => enter(VOYAGER_SHOTS));
   $('#go-explore').addEventListener('click', () => enter(false));
   $('#go-tour').addEventListener('click', () => enter(true));

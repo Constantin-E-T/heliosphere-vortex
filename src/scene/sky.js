@@ -1,3 +1,4 @@
+import { texUrl } from '../core/tex-url.js';
 import * as THREE from 'three';
 import { rng } from '../core/util.js';
 import { V, galToScene, renderer, scene } from './renderer.js';
@@ -73,7 +74,7 @@ export const skyMesh = new THREE.Mesh(
 export function loadMap(mat, name) {
   if (!name) return;
   texLoader.load(
-    `tex/${name}.jpg`,
+    texUrl(name),
     t => {
       t.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
       mat.map = t;
@@ -113,7 +114,7 @@ export function initSky() {
   skyMesh.visible = false;
   sky.add(skyMesh);
   texLoader.load(
-    'tex/sky.jpg',
+    texUrl('sky'),
     t => {
       t.generateMipmaps = false;
       t.minFilter = THREE.LinearFilter;

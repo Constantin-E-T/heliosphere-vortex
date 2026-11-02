@@ -8,86 +8,19 @@ import '@fontsource/syne/latin-600.css';
 import '@fontsource/syne/latin-700.css';
 import '@fontsource/syne/latin-800.css';
 import './styles/app.css';
-import { initUtil, showFatal } from './core/util.js';
-import { initSolarData } from './data/solar.js';
-import { initRenderer } from './scene/renderer.js';
-import { initTextures } from './scene/textures.js';
-import { initSky } from './scene/sky.js';
-import { initSun } from './scene/sun.js';
-import { initPlanets } from './scene/planets.js';
-import { initVoyager } from './scene/voyager.js';
-import { initDust } from './scene/dust.js';
-import { initWakes } from './scene/wakes.js';
-import { initState } from './core/state.js';
-import { initTime } from './core/time.js';
-import { initCamera } from './camera/camera.js';
-import { initLabels } from './ui/labels.js';
-import { initInfoCard } from './ui/info-card.js';
-import { initTimeMachine } from './ui/time-machine.js';
-import { initCleanView } from './ui/clean-view.js';
-import { initPanel } from './ui/panel.js';
-import { initSound } from './ui/sound.js';
-import { initKeyboard } from './ui/keyboard.js';
-import { initPicking } from './ui/picking.js';
-import { initCinematic } from './camera/cinematic.js';
-import { initCosmicScales } from './cosmic/scales.js';
-import { initCosmicRender } from './cosmic/render.js';
-import { initMilkyWay } from './cosmic/milky-way.js';
-import { initPhotos } from './cosmic/photos.js';
-import { initCatalogue } from './cosmic/catalogue.js';
-import { initCosmicLevels } from './cosmic/levels.js';
-import { initCosmicInfo } from './cosmic/info.js';
-import { initFlight } from './cosmic/flight.js';
-import { initSwitching } from './cosmic/switching.js';
-import { initLoop } from './core/loop.js';
-import { initBoot } from './core/boot.js';
 import { initVoyagerHero } from './ui/voyager-hero.js';
-import { initWelcome } from './ui/welcome.js';
 
-// Order matters: each step uses what the steps before it created.
-function start() {
-  if (!initUtil()) return;
-  try {
-    initSolarData();
-    initRenderer();
-    initTextures();
-    initSky();
-    initSun();
-    initPlanets();
-    initVoyager();
-    initDust();
-    initWakes();
-    initState();
-    initTime();
-    initCamera();
-    initLabels();
-    initInfoCard();
-    initTimeMachine();
-    initCleanView();
-    initPanel();
-    initSound();
-    initKeyboard();
-    initPicking();
-    initCinematic();
-    initCosmicScales();
-    initCosmicRender();
-    initMilkyWay();
-    initPhotos();
-    initCatalogue();
-    initCosmicLevels();
-    initCosmicInfo();
-    initFlight();
-    initSwitching();
-    initLoop();
-    initBoot();
-    initWelcome();
-    initVoyagerHero();
-  } catch (e) {
-    console.error(e);
-    showFatal(
-      'The 3D view could not start on this device. Try a recent Chrome, Safari, Edge or Firefox.'
-    );
-  }
-}
+const nextPaint = () =>
+  new Promise(resolve => {
+    const timer = setTimeout(resolve, 100); // animation frames stop in a hidden tab
+    requestAnimationFrame(() => {
+      clearTimeout(timer);
+      setTimeout(resolve);
+    });
+  });
 
+// The headline shows first. The 3D code loads afterwards, in its own file.
+initVoyagerHero();
+await nextPaint();
+const { start } = await import('./app.js');
 start();
