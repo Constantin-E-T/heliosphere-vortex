@@ -7,7 +7,10 @@ export default [
   {
     files: ['src/**/*.js'],
     languageOptions: { globals: globals.browser },
-    rules: { 'no-empty': ['error', { allowEmptyCatch: true }] }
+    rules: {
+      'no-empty': ['error', { allowEmptyCatch: true }],
+      'no-unused-vars': ['error', { caughtErrors: 'none' }]
+    }
   },
   {
     files: ['scripts/**', 'tests/**', '*.config.js'],
