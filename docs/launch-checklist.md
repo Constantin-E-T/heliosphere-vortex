@@ -16,7 +16,7 @@ Target: live by Fri 13 Nov 2026. Fixes only from Sun 15 Nov. Milestone: 18 Nov 2
 - [ ] `npx playwright test visual --update-snapshots`, and look at the screenshots
 - [ ] If the address differs from `heliosphere-vortex.pages.dev`, update `.env.production`, `public/robots.txt` and `public/sitemap.xml`
 - [ ] Remake the share card with `scripts/make-share-card.mjs`
-- [ ] Test in Safari and Firefox
+- [ ] Test in real Safari. Firefox and WebKit engines already pass all feature tests
 - [ ] Check the link preview in a messaging app
 - [ ] Run the checks in `AGENTS.md`, then deploy `dist`
 

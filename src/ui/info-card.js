@@ -145,7 +145,7 @@ export function initInfoCard() {
     e.currentTarget.textContent = min ? '+' : '–';
     e.currentTarget.setAttribute('aria-label', min ? 'Expand details' : 'Collapse details');
   });
-  if (innerWidth < 720) {
+  if (innerWidth < 720 || innerHeight < 720) {
     $('#info').classList.add('min');
     $('#in-min').textContent = '+';
   }

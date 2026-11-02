@@ -135,3 +135,19 @@ test('the app starts when every image fails to load', async ({ page }) => {
   await expect(page.locator('#in-name, #d-date').first()).toBeAttached();
   expect(errors).toEqual([]);
 });
+
+for (const [width, height] of [
+  [800, 600],
+  [844, 390],
+  [390, 844]
+]) {
+  test(`time controls stay on screen at ${width}x${height}`, async ({ page }) => {
+    await page.setViewportSize({ width, height });
+    await openApp(page);
+    await explore(page);
+    await page.keyboard.press('9');
+    await expect(page.locator('#in-name')).toHaveText('Voyager 1');
+    const box = await page.locator('#tl').boundingBox();
+    expect(box.y + box.height).toBeLessThanOrEqual(height);
+  });
+}

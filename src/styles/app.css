@@ -244,6 +244,20 @@ body.cine-on .hud,body.cine-on #labels,body.cine-on .mini,body.cine-on .panel,bo
   .info{width:100%}
   .pop{width:100%}
 }
+/* Short screens, such as a phone held sideways: keep the time controls in view */
+@media (max-height:520px){
+  .hud{gap:6px}
+  .top{flex-wrap:nowrap;align-items:center}
+  .brand{flex-direction:row;align-items:center;padding:6px 8px}
+  .brand h1{display:none}
+  .actions{flex-wrap:nowrap}
+  .btn span{display:none}
+  .btn{padding:0 10px}
+  .bottom{gap:6px}
+  .info{padding:6px 12px}
+  .timebar{padding:8px 12px 6px;gap:6px}
+  .prec,.ticks{display:none}
+}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 
 /* ---------- Welcome / loading ---------- */
