@@ -1,0 +1,258 @@
+<title>Heliosphere Vortex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap">
+
+<div id="stage"></div>
+<div class="warp" id="warp"></div>
+<div id="labels"></div>
+
+<div class="hud" id="hud">
+  <div class="top">
+    <div class="brand glass">
+      <h1>Heliosphere <b>Vortex</b></h1>
+      <div class="segs">
+      <div class="seg" role="group" aria-label="Scale" id="levels">
+        <button data-level="solar" aria-pressed="true"><span class="full">Solar System</span><span class="short">Solar</span></button>
+        <button data-level="mw" aria-pressed="false"><span class="full">Milky Way</span><span class="short">Galaxy</span></button>
+        <button data-level="lg" aria-pressed="false"><span class="full">Local Group</span><span class="short">Group</span></button>
+        <button data-level="lu" aria-pressed="false"><span class="full">Local Universe</span><span class="short">Universe</span></button>
+      </div>
+      <div class="seg" role="group" aria-label="Reference frame" id="frame-seg">
+        <button data-frame="galactic" aria-pressed="true" title="The Sun moving through the Milky Way (G)">Galactic</button>
+        <button data-frame="helio" aria-pressed="false" title="Sun held still (G)">Heliocentric</button>
+      </div>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn" id="b-cine" aria-label="Cinematic tour" title="Cinematic tour (C)">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1.5" y="3.5" width="9" height="9" rx="1.5"/><path d="M10.5 7l4-2.5v7l-4-2.5z" fill="currentColor"/></svg><span>Cinematic</span></button>
+      <button class="btn" id="b-ui" aria-label="Hide or show panels" aria-pressed="false" title="Hide or show all panels (H)">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" id="i-ui"><path d="M1.5 8s2.4-4.5 6.5-4.5S14.5 8 14.5 8 12.1 12.5 8 12.5 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/></svg><span id="t-ui">Hide UI</span></button>
+      <button class="btn" id="b-labels" aria-label="Labels" aria-pressed="true" title="Labels (L)">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 3h7l5 5-5 5H2z"/><circle cx="5.5" cy="8" r="1" fill="currentColor"/></svg><span>Labels</span></button>
+      <button class="btn" id="b-sound" aria-label="Ambient sound" aria-pressed="false" title="Ambient drone">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 6h3l4-3v10l-4-3H2z" fill="currentColor"/><path d="M11.5 5.5a3.5 3.5 0 0 1 0 5M13 3.5a6 6 0 0 1 0 9"/></svg><span>Sound</span></button>
+      <button class="btn" id="b-help" title="Help and credits (?)" aria-label="Help and credits">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="6.5"/><path d="M6.2 6.2a1.9 1.9 0 1 1 2.6 1.8c-.5.2-.8.6-.8 1.1v.4"/><circle cx="8" cy="11.6" r=".5" fill="currentColor"/></svg></button>
+      <button class="btn" id="b-panel" aria-label="Controls" aria-pressed="true" title="Controls">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 4h12M2 8h12M2 12h12"/><circle cx="5" cy="4" r="1.6" fill="#04050b"/><circle cx="11" cy="8" r="1.6" fill="#04050b"/><circle cx="7" cy="12" r="1.6" fill="#04050b"/></svg><span>Controls</span></button>
+    </div>
+  </div>
+
+  <div class="bottom">
+    <section class="info glass" id="info" aria-live="polite">
+      <div class="info-head">
+        <i class="sw" id="in-sw"></i><h2 id="in-name">Sun</h2><small id="in-kind">G2V star</small>
+        <button class="info-toggle" id="in-min" title="Collapse" aria-label="Collapse details">–</button>
+      </div>
+      <div class="status" id="in-status" hidden></div>
+      <div class="seg" id="in-tel" role="group" aria-label="Telescope" hidden><button data-tel="webb" aria-pressed="true">James Webb</button><button data-tel="hubble" aria-pressed="false">Hubble</button></div>
+      <dl class="stats" id="in-stats"></dl>
+      <p id="in-note"></p>
+    </section>
+    <nav class="bar glass" id="bar" aria-label="Focus a body"></nav>
+    <nav class="bar glass cosonly" id="cbar" aria-label="Focus an object"></nav>
+    <div class="cos-row cosonly"><div class="scale-pill glass" id="cos-scale"></div><button class="scale-pill glass" id="b-gspin" aria-pressed="true" title="Rotation sped up about 30 trillion times">Galaxies turning</button></div>
+
+    <section class="timebar glass" aria-label="Time machine">
+      <div class="tb-row">
+        <div class="clock">
+          <div class="date" id="d-date">—</div>
+          <div class="time" id="d-time">—</div>
+        </div>
+        <button class="tb-btn" id="b-now" title="Back to the present, live (N)">Now</button>
+        <button class="tb-btn" id="b-jump" aria-expanded="false" title="Jump to a date or event (E)">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="3" width="12" height="11" rx="2"/><path d="M2 7h12M5 1.5v3M11 1.5v3"/></svg>Jump</button>
+      </div>
+      <div class="tb-row">
+        <button class="tb-btn" id="b-rev" aria-pressed="false" title="Run time backwards (R)">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 3v10L1.5 8zM15 3v10L8.5 8z"/></svg></button>
+        <button class="tb-btn" id="b-back" title="Step back (←)"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M3 2h2v12H3zM14 2v12L6 8z"/></svg></button>
+        <button class="tb-btn play" id="b-play" title="Play / pause (Space)"><svg viewBox="0 0 16 16" fill="currentColor" id="i-play"></svg></button>
+        <button class="tb-btn" id="b-fwd" title="Step forward (→)"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M11 2h2v12h-2zM2 2v12l8-6z"/></svg></button>
+        <div class="rate" title="Time rate ([ and ])"><button id="b-slower" aria-label="Slower">−</button><output id="o-rate">1 week / s</output><button id="b-faster" aria-label="Faster">+</button></div>
+        <div class="prec" id="d-prec"><i></i><span id="d-prec-t"></span></div>
+      </div>
+      <div class="track">
+        <div class="band" id="band"><span class="t1" id="band-t1"></span><span class="voy" id="band-voy"></span><span class="now" id="band-now"></span></div>
+        <input type="range" id="tl" min="0" max="10000" step="1" aria-label="Timeline, 3000 BC to AD 3000">
+        <div class="ticks" id="ticks"></div>
+      </div>
+
+      <div class="pop glass" id="pop" hidden>
+        <form id="f-go">
+          <input type="text" id="i-date" placeholder="1969-07-20 20:17  or  44 BC-03-15" autocomplete="off" spellcheck="false" aria-label="Date to jump to">
+          <button class="tb-btn" type="submit">Go</button>
+        </form>
+        <p class="hint" id="go-hint">Any date from 3000 BC to AD 3000, in UTC. Dates before 15 Oct 1582 use the Julian calendar.</p>
+        <div class="evs" id="evs"></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div class="mini glass" id="mini" hidden>
+  <div class="md"><b id="m-date">—</b><span id="m-rate">—</span></div>
+  <button class="tb-btn play" id="m-play" title="Play / pause (Space)"><svg viewBox="0 0 16 16" fill="currentColor" id="i-play2"></svg></button>
+  <button class="tb-btn" id="m-show" title="Show all panels (H)">Show panels</button>
+</div>
+<div class="fade" id="fade"></div>
+<div class="cine" id="cine" hidden>
+  <div class="lb top"></div><div class="lb bot"></div>
+  <div class="cine-band t"><span>Heliosphere Vortex <span class="opt">· drag to look around · tap a planet to visit it</span></span>
+    <div class="cine-ctl">
+      <button class="tb-btn cine-exit" id="cine-prev" aria-label="Previous shot" title="Previous shot (←)"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M3 2h2v12H3zM14 2v12L6 8z"/></svg></button>
+      <button class="tb-btn cine-exit" id="cine-pause" aria-label="Pause tour" title="Pause (Space)"><svg viewBox="0 0 16 16" fill="currentColor" id="i-cine-pause"><rect x="3" y="2" width="3.5" height="12" rx="1"/><rect x="9.5" y="2" width="3.5" height="12" rx="1"/></svg></button>
+      <button class="tb-btn cine-exit" id="cine-next" aria-label="Next shot" title="Next shot (→)"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M11 2h2v12h-2zM2 2v12l8-6z"/></svg></button>
+      <button class="tb-btn cine-exit" id="cine-exit">Exit</button>
+    </div></div>
+  <div class="l3" id="l3"><div class="eb" id="l3-eb"></div><div class="tt" id="l3-t"></div><div class="ss" id="l3-s"></div></div>
+  <div class="cine-band b"><span id="cine-date"></span><span><b id="cine-n"></b> <span class="opt" id="cine-rate"></span></span><div class="cine-prog" id="cine-prog"></div></div>
+  <div class="cine-fade" id="cine-fade"></div>
+</div>
+<div class="scrim" id="scrim"></div>
+<aside class="panel glass closed" id="panel" aria-label="Simulation controls">
+  <h3>Controls <button class="x" id="p-close" aria-label="Close controls">✕</button></h3>
+
+  <div class="grp">
+    <div class="cap">Distance scale</div>
+    <div class="seg" role="group" aria-label="Distance scale">
+      <button data-scale="sqrt" aria-pressed="true">Compressed</button>
+      <button data-scale="linear" aria-pressed="false">True linear</button>
+    </div>
+    <p class="note">Directions are exact either way. Compressed draws distance as √AU so Mercury and Voyager 1 fit on one screen. Planets are enlarged so you can see them, but their sizes keep roughly true proportions within the rocky and the giant planets. Gaps between orbits are never smaller than they look.</p>
+  </div>
+
+  <div class="grp">
+    <div class="cap">Camera</div>
+    <div class="views" id="views">
+      <button class="view" data-view="overview" aria-pressed="true">Overview</button>
+      <button class="view" data-view="top" aria-pressed="false">Ecliptic N</button>
+      <button class="view" data-view="edge" aria-pressed="false">Edge-on</button>
+      <button class="view" data-view="chase" aria-pressed="false">Chase</button>
+      <button class="view" data-view="galaxy" aria-pressed="false">Galaxy</button>
+      <button class="view" data-view="cine" aria-pressed="false">Cinematic</button>
+    </div>
+  </div>
+
+  <div class="grp">
+    <div class="sl"><label for="s-drift">Galactic drift <output id="o-drift">120</output></label><input type="range" id="s-drift" min="0" max="400" step="5" value="120"></div>
+    <button class="linkbtn" id="b-true">Use the true ratio (251.9 km/s, linear scale)</button>
+    <div class="sl"><label for="s-wake">Wake length <output id="o-wake">600</output></label><input type="range" id="s-wake" min="100" max="2000" step="50" value="600"></div>
+  </div>
+
+  <div class="grp">
+    <div class="cap">Layers</div>
+    <div class="toggles">
+      <label class="tg"><input type="checkbox" id="t-trails" checked>Wakes</label>
+      <label class="tg"><input type="checkbox" id="t-orbits" checked>Orbits</label>
+      <label class="tg"><input type="checkbox" id="t-helio" checked>Heliosphere</label>
+      <label class="tg"><input type="checkbox" id="t-voypath" checked>Voyager path</label>
+      <label class="tg"><input type="checkbox" id="t-guides" checked>Guides</label>
+      <label class="tg"><input type="checkbox" id="t-grid">Galactic plane</label>
+      <label class="tg"><input type="checkbox" id="t-moons" checked>Moons</label>
+      <label class="tg"><input type="checkbox" id="t-dust" checked>Dust</label>
+    </div>
+  </div>
+
+  <div class="grp">
+    <div class="cap">Keys</div>
+    <div class="keys">
+      <kbd>Space</kbd><span>Play / pause</span>
+      <kbd>[ ]</kbd><span>Slower / faster</span>
+      <kbd>R</kbd><span>Reverse time</span>
+      <kbd>← →</kbd><span>Step one day (Shift: one year)</span>
+      <kbd>N E</kbd><span>Now, jump to date</span>
+      <kbd>0–9</kbd><span>Focus Sun, planets, Voyager 1</span>
+      <kbd>G V</kbd><span>Frame, camera view</span>
+      <kbd>C</kbd><span>Cinematic tour (← → shots, Esc exits)</span>
+      <kbd>L T O</kbd><span>Labels, wakes, orbits</span>
+      <kbd>H</kbd><span>Hide or show all panels</span>
+    </div>
+  </div>
+
+  <div class="grp">
+    <div class="cap">Data and precision</div>
+    <ul class="src">
+      <li>Planets: <a href="https://ssd.jpl.nasa.gov/planets/approx_pos.html" target="_blank" rel="noopener">JPL approximate positions</a> (Standish). Table 1 for 1800–2050 (≤ 10′), Tables 2a+2b for 3000 BC–AD 3000 (≤ 34′).</li>
+      <li>Moon: Astronomical Almanac series, about ±0.5°. Its distance from Earth is drawn enlarged.</li>
+      <li>Moons of Mars, Jupiter, Saturn: <a href="https://ssd.jpl.nasa.gov/sats/elem/" target="_blank" rel="noopener">JPL mean elements</a>. Orbital phase only; Titan's starting phase is approximate.</li>
+      <li>Voyager 1: <a href="https://ssd.jpl.nasa.gov/horizons/" target="_blank" rel="noopener">JPL Horizons</a> trajectory 1977–2030, straight-line extrapolation after.</li>
+      <li>Surfaces: NASA Blue Marble Next Generation (Earth); NASA 3D Resources maps for Mars, Venus (Magellan radar under a cloud veil), Jupiter, Saturn, Neptune, the Galilean moons, Titan, Phobos and Deimos. Sky: NASA Tycho star map. Earth turns by true sidereal time.</li>
+      <li>Spin axes: IAU WGCCRE 2015 poles. Physical data: <a href="https://nssdc.gsfc.nasa.gov/planetary/factsheet/" target="_blank" rel="noopener">NASA fact sheet</a>.</li>
+      <li>Heliosphere: Voyager 1 crossings (94 and 121.6 AU), IBEX inflow direction (Swaczyna et al. 2022). Galaxy: Hipparcos frame, Sun at 251.9 km/s (Reid & Brunthaler 2020, Schönrich et al. 2010).</li>
+      <li>Galactic drift speed on screen is illustrative unless you choose the true ratio.</li>
+      <li>Galaxies: positions from galactic coordinates; distances from McConnachie 2012, Pietrzyński 2019 (LMC), Graczyk 2020 (SMC), Li 2021 (M31), Mei 2007 (Virgo), Blakeslee 2009 (Fornax), redshift with H₀ = 70 beyond 40 Mpc. Milky Way arms are a log-spiral model. Laniakea outline is schematic (Tully 2014).</li>
+    </ul>
+  </div>
+</aside>
+
+<div class="splash" id="splash" role="dialog" aria-modal="true" aria-labelledby="splash-title">
+  <div class="splash-inner">
+    <p class="eyebrow">Our place in space</p>
+    <h1 id="splash-title">Heliosphere <b>Vortex</b></h1>
+    <p class="splash-sub">Fly from today's planets to the Laniakea Supercluster. Every position comes from NASA and JPL data, and you can travel 6,000 years through time.</p>
+    <div class="load" aria-live="polite"><div class="track2"><span id="load-bar"></span></div><small id="load-t">Loading NASA imagery</small></div>
+    <div class="cta-row">
+      <button class="cta" id="go-explore" disabled>Explore</button>
+      <button class="cta ghost" id="go-tour" disabled>Watch the tour</button>
+    </div>
+    <p class="splash-err" id="splash-err" hidden></p>
+    <p class="splash-foot">Drag to orbit · scroll or pinch to zoom · tap any object</p>
+  </div>
+</div>
+<div class="modal" id="help" hidden role="dialog" aria-modal="true" aria-labelledby="help-title">
+  <div class="sheet glass">
+    <header><h2 id="help-title">Heliosphere Vortex</h2><button class="x" id="help-close" aria-label="Close">✕</button></header>
+    <div class="tabs" role="tablist">
+      <button role="tab" aria-selected="true" data-tab="use">How to use</button>
+      <button role="tab" aria-selected="false" data-tab="data">The data</button>
+      <button role="tab" aria-selected="false" data-tab="credits">Credits</button>
+    </div>
+    <section class="tabpanel" data-panel="use">
+      <div class="grid2">
+        <div class="tile"><b>Move around</b><span>Drag to orbit, scroll or pinch to zoom, right-drag or two-finger drag to pan. Tap any planet, label or chip to fly to it.</span></div>
+        <div class="tile"><b>Travel in time</b><span>Play, reverse and change speed on the mission clock, drag the timeline, or tap Jump for a date or a famous event.</span></div>
+        <div class="tile"><b>Change scale</b><span>Switch between Solar System, Milky Way, Local Group and Local Universe under the title.</span></div>
+        <div class="tile"><b>Sit back</b><span>Cinematic plays a directed tour. Drag to look around, tap a planet to visit it, tap empty space to pause; the tour carries on. Hide UI clears the screen.</span></div>
+      </div>
+      <h3>Keyboard</h3>
+      <div class="keys">
+        <kbd>Space</kbd><span>Play or pause</span><kbd>[ ]</kbd><span>Slower, faster</span><kbd>R</kbd><span>Reverse time</span>
+        <kbd>← →</kbd><span>Step a day (Shift: a year)</span><kbd>N</kbd><span>Back to now</span><kbd>E</kbd><span>Jump to a date</span>
+        <kbd>0–9</kbd><span>Focus the Sun, a planet or Voyager 1</span><kbd>C</kbd><span>Cinematic tour (← → change shot, Esc exits)</span><kbd>H</kbd><span>Hide or show panels</span><kbd>?</kbd><span>This help</span>
+      </div>
+    </section>
+    <section class="tabpanel" data-panel="data" hidden>
+      <p>Positions are computed live in your browser from published scientific data. Nothing is animated by hand.</p>
+      <ul>
+        <li><b>Planets</b> use JPL's Keplerian elements (Standish): within 10′ for 1800–2050 and within 34′ for 3000 BC–AD 3000.</li>
+        <li><b>Voyager 1</b> follows JPL Horizons. Tested: it reaches 24.0 light-hours from Earth on 18 Nov 2026, the date NASA announced.</li>
+        <li><b>Earth</b> turns by true sidereal time, so the side facing the Sun matches the real time of day.</li>
+        <li><b>The Moon</b> uses the Astronomical Almanac series (±0.5°). Planetary moons use JPL mean elements for their phase.</li>
+        <li><b>Galaxies and clusters</b> sit at catalogued sky positions and measured distances. Beyond 40 Mpc, distances come from redshift with H₀ = 70.</li>
+      </ul>
+      <h3>What is approximate</h3>
+      <ul>
+        <li>Planet sizes are enlarged, and distances can be shown compressed. Directions are always exact.</li>
+        <li>The Milky Way's arms are a log-spiral model. Nobody has mapped its far side.</li>
+        <li>Galaxies and nebulae are rendered from their type, size and orientation, not from photographs. Their rotation is sped up about 30 trillion times.</li>
+        <li>Laniakea's outline is schematic.</li>
+      </ul>
+    </section>
+    <section class="tabpanel" data-panel="credits" hidden>
+      <ul>
+        <li>Earth: NASA Blue Marble Next Generation, via <a href="https://github.com/NASAWorldWind/WebWorldWind" target="_blank" rel="noopener">NASA WorldWind</a>.</li>
+        <li>Mars, Venus (Magellan radar), Jupiter, Saturn, Neptune, Io, Europa, Ganymede, Callisto, Titan, Phobos, Deimos and the Tycho star map: <a href="https://github.com/nasa/NASA-3D-Resources" target="_blank" rel="noopener">NASA 3D Resources</a>, free and without copyright.</li>
+        <li>Webb and Hubble images of the Cosmic Cliffs, Southern Ring Nebula, Tarantula Nebula, Stephan's Quintet, Cartwheel Galaxy and Webb's First Deep Field: NASA, ESA, CSA, STScI.</li>
+        <li>Ephemerides: <a href="https://ssd.jpl.nasa.gov/planets/approx_pos.html" target="_blank" rel="noopener">JPL Solar System Dynamics</a> and <a href="https://ssd.jpl.nasa.gov/horizons/" target="_blank" rel="noopener">JPL Horizons</a>. Physical data: <a href="https://nssdc.gsfc.nasa.gov/planetary/factsheet/" target="_blank" rel="noopener">NASA NSSDCA</a>. Spin axes: IAU WGCCRE 2015.</li>
+        <li>Galaxy and heliosphere measurements: GRAVITY 2021, Reid &amp; Brunthaler 2020, Schönrich et al. 2010, Bennett &amp; Bovy 2019, McConnachie 2012, Pietrzyński et al. 2019, Graczyk et al. 2020, Li et al. 2021, Mei et al. 2007, Blakeslee et al. 2009, Tully et al. 2014, Swaczyna et al. 2022 (IBEX).</li>
+        <li>Built with <a href="https://threejs.org" target="_blank" rel="noopener">three.js</a>. Type: Syne, Manrope and JetBrains Mono.</li>
+      </ul>
+      <p class="version">Version 1.0 · 31 October 2026 · Not affiliated with or endorsed by NASA.</p>
+    </section>
+  </div>
+</div>
+<div class="toast glass" id="toast" role="status"></div>
+<script type="module" src="/src/main.js"></script>
