@@ -1,0 +1,11 @@
+node_modules
+dist
+test-results
+playwright-report
+assets-src
+reference
+.git
+.github
+.claude
+.env.local
+.DS_Store

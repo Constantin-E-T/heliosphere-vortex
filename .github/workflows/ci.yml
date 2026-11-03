@@ -21,3 +21,4 @@ jobs:
       - run: npm test
       - run: npm run build
       - run: npm run check:size
+      - run: docker build --build-arg VITE_SITE_URL=https://example.test -t heliosphere-vortex .

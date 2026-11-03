@@ -10,7 +10,7 @@ Read `README.md`, `DESIGN.md` and `HANDOFF.md` first.
 - Do not change the order in `src/app.js` without reading what each step uses.
 - Say "first reached" for one light-day: Earth's orbit takes Voyager back under it for part of 2027.
 - Voyager 1 is in interstellar space. It has not left the Milky Way.
-- Everything loads from the app's own address. The security policy in `public/_headers` blocks the rest.
+- Everything loads from the app's own address. The security policy in `deploy/security-headers.conf` blocks the rest; `vite preview` uses the same policy.
 - Do not edit `reference/`.
 
 ## Before committing

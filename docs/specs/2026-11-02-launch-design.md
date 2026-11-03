@@ -128,7 +128,7 @@ How we get there:
 
 ## Publishing (my guess, please correct)
 
-- Hosting on Cloudflare Pages, free and fast, because FieldOps already uses Cloudflare.
+- Hosting on Cloudflare Pages, free and fast, because FieldOps already uses Cloudflare. **Changed 3 Nov 2026:** the owner chose the FieldOps VPS with Coolify. See `Dockerfile` and `deploy/`.
 - GitHub repository `Constantin-E-T/heliosphere-vortex`, public, MIT licence for the code. Images keep their own credits in `CREDITS.md`.
 - Automatic checks on GitHub: tests, build, size limit.
 - Privacy-friendly: no cookies, no tracking banner. Cloudflare's cookie-free visitor count only.

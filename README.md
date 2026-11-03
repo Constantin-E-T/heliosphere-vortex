@@ -43,6 +43,16 @@ npm run test:e2e
 npm run lint
 ```
 
+## Host it
+
+The `Dockerfile` builds the site and serves it with nginx on port 80. Pass the public address at build time:
+
+```bash
+docker build --build-arg VITE_SITE_URL=https://your.domain -t heliosphere-vortex .
+```
+
+On Coolify: create an application from this repository, choose the Dockerfile build pack, set port 80, and add `VITE_SITE_URL` as a build variable. Coolify's proxy adds HTTPS. Security headers and caching live in `deploy/`.
+
 ## How it is organised
 
 | Folder | Holds |
